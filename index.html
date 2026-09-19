@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>나의 글 모음</title>
+
+<style>
+
+/* =====================================================
+   전체 브라우저
+   ===================================================== */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    font-family: 'Noto Sans KR', sans-serif;
+
+    background-image: url('background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+/* =====================================================
+   전체 시카페
+   ===================================================== */
+
+.reader {
+
+    width: 100%;
+    height: 100vh;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: stretch;
+
+    gap: 20px;
+
+    padding: 15px 20px;
+}
+
+
+/* =====================================================
+   왼쪽 제목 영역
+   ===================================================== */
+
+.sidebar {
+
+    width: 16vw;
+    min-width: 180px;
+
+    height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 20px 15px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(30,30,30,0.90),
+            rgba(55,55,55,0.84)
+        );
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.30);
+
+    color: white;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+    
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =====================================================
+   제목
+   ===================================================== */
+
+.main-title {
+
+    text-align: center;
+
+    font-size: 25px;
+
+    font-weight: 600;
+
+    margin-bottom: 18px;
+
+    letter-spacing: 2px;
+    
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   음악
+   ===================================================== */
+
+.audio-box {
+
+    width: 100%;
+
+    margin-bottom: 18px;
+
+    text-align: center;
+    
+    flex-shrink: 0;
+}
+
+.audio-box audio {
+
+    width: 100%;
+}
+
+
+/* =====================================================
+   제목 목록
+   ===================================================== */
+
+.title-list {
+
+    width: 100%;
+
+    flex: 1;
+    overflow-y: auto;
+}
+
+
+.title-item {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px 8px;
+
+    margin-bottom: 6px;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    color: #eeeeee;
+
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+
+.title-item:hover {
+
+    background: rgba(255,255,255,0.14);
+
+    transform: translateX(3px);
+}
+
+
+.title-item.active {
+
+    background: rgba(255,255,255,0.22);
+
+    color: white;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   오른쪽 전체 영역
+   ===================================================== */
+
+.content {
+
+    width: 45vw;
+
+    height: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    flex-shrink: 0;
+
+    min-height: 0;
+}
+
+
+/* =====================================================
+   본문 박스
+   ===================================================== */
+
+.content-box {
+
+    flex: 1;  
+
+    min-height: 0;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 15px 40px;
+
+    border-radius: 18px;
+
+    background: rgba(253,246,227,0.95);
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,0.25);
+
+    color: #333;
+
+    font-size: 18px;
+
+    line-height: 1.9;
+
+    white-space: pre-line;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    scrollbar-gutter: stable;
+
+    display: none;
+}
+
+
+/* 현재 본문 */
+
+.content-box.active {
+
+    display: block;
+}
+
+
+/* =====================================================
+   본문 제목
+   ===================================================== */
+
+.content-title {
+
+    font-size: 27px;
+
+    font-weight: 600;
+
+    margin-bottom: 12px;
+
+    padding-bottom: 6px;
+
+    line-height: 1.2; 
+
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+
+/* =====================================================
+   본문 스크롤바
+   ===================================================== */
+
+.content-box::-webkit-scrollbar {
+
+    width: 9px;
+}
+
+.content-box::-webkit-scrollbar-track {
+
+    background: rgba(0,0,0,0.06);
+
+    border-radius: 10px;
+}
+
+.content-box::-webkit-scrollbar-thumb {
+
+    background: rgba(80,80,80,0.38);
+
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+   PC 본문 아래 페이지 수열
+   ===================================================== */
+
+.pagination {
+
+    flex: 0 0 55px;
+
+    height: 55px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+}
+
+
+/* 페이지 번호 */
+
+.page-number {
+
+    min-width: 30px;
+
+    height: 30px;
+
+    padding: 0 8px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: rgba(40,40,40,0.65);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition:
+        background 0.2s,
+        transform 0.2s;
+}
+
+
+.page-number:hover {
+
+    background: rgba(40,40,40,0.85);
+
+    transform: translateY(-2px);
+}
+
+
+/* 현재 페이지 */
+
+.page-number.active {
+
+    background: rgba(255,255,255,0.92);
+
+    color: #333;
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   작은 화면 (스마트폰)
+   ===================================================== */
+
+.mobile-back {
+    display: none;
+}
+
+.mobile-pagination {
+    display: none;
+}
+
+@media (max-width: 600px) {
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .reader {
+        display: block;
+        width: 100%;
+        height: 100vh;
+        padding: 0;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-width: 0;
+        height: 100vh;
+        padding: 15px;
+        box-sizing: border-box;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden; /* 내부 title-list만 스크롤되도록 제어 */
+    }
+
+    .audio-box {
+        margin-bottom: 10px;
+    }
+
+    .main-title {
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+
+    /* 스마트폰 제목 목록 스크롤 영역 확보 */
+    .title-list {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+
+    .title-item {
+        font-size: 16px;
+        padding: 11px 10px;
+        margin-bottom: 6px;
+    }
+
+    .content {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        padding: 0;
+        z-index: 1000;
+        background: rgba(253,246,227,0.98);
+    }
+
+    .content.mobile-open {
+        display: flex;
+    }
+
+    .content-box {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        padding: 18px 22px 35px;
+        box-sizing: border-box;
+        border-radius: 0;
+        box-shadow: none;
+        font-size: 18px;
+        line-height: 1.85;
+        overflow-y: auto;
+    }
+
+    .content-title {
+        font-size: 24px;
+        margin-bottom: 14px;
+        padding-bottom: 8px;
+    }
+
+    .mobile-back {
+        display: block;
+        width: 100%;
+        height: 58px;
+        flex-shrink: 0;
+        border: none;
+        background: rgba(40,40,40,0.92);
+        color: white;
+        font-size: 16px;
+        text-align: left;
+        padding: 0 18px;
+        cursor: pointer;
+    }
+
+    /* 스마트폰 하단 페이지 수열 고정 노출 */
+    .mobile-pagination {
+        display: flex;
+        width: 100%;
+        flex: 0 0 45px;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        flex-shrink: 0;
+        padding-bottom: 5px;
+    }
+
+    /* PC용 페이지 수열은 스마트폰에서 숨김 */
+    .pagination {
+        display: none;
+    }
+
+    .page-number {
+        min-width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="reader">
+
+    <!-- 왼쪽 제목 -->
+    <aside class="sidebar">
+
+        <!-- 음악 : 맨 위 -->
+        <div class="audio-box">
+            <audio id="music" controls preload="auto" loop>
+                <source src="music.mp3" type="audio/mpeg">
+            </audio>
+        </div>
+
+        <!-- 제목 -->
+        <div class="main-title">
+            나의 글 모음
+        </div>
+
+         <!-- 제목 목록 -->
+        <div class="title-list">
+            <div class="title-item" onclick="showContent(0)">당신의 체온</div>
+            <div class="title-item" onclick="showContent(1)">가시는 내목의 진주 목걸이</div>
+            <div class="title-item" onclick="showContent(2)">스마트폰이 대중화되기 전</div>
+            <div class="title-item" onclick="showContent(3)">시는</div>
+            <div class="title-item" onclick="showContent(4)">평생 극장에 간 날은</div>
+            <div class="title-item" onclick="showContent(5)">​영화처럼</div>
+            <div class="title-item" onclick="showContent(6)">​가을 안개는</div>
+            <div class="title-item" onclick="showContent(7)">내 목엔 진주 목걸이</div>
+            <div class="title-item" onclick="showContent(8)">낙엽이 떨어질 때</div>
+            <div class="title-item" onclick="showContent(9)">건너편 머스마</div>
+            <div class="title-item" onclick="showContent(10)">대칭</div>
+            <div class="title-item" onclick="showContent(11)">거울 속 나. </div>
+            <div class="title-item" onclick="showContent(12)">국화의 향기</div>
+            <div class="title-item" onclick="showContent(13)">12</div>
+            <div class="title-item" onclick="showContent(14)">232</div>
+            <div class="title-item" onclick="showContent(15)">45</div>
+        </div>
+
+        <!-- 스마트폰 전용 페이지 수열 -->
+        <div class="mobile-pagination" id="mobilePagination"></div>
+
+    </aside>
+
+    <!-- 오른쪽 본문 -->
+    <main class="content">
+        <button class="mobile-back" onclick="backToTitles()">← 제목 목록으로 돌아가기</button>
+
+        <!-- 1. 당신의 체온 -->
+        <div class="content-box">
+            <div class="content-title">당신의 체온</div>
+당신의 체온이
+내게 닿는 순간
+
+이 가을은
+춥지 않을거야
+
+창문에 숨결 하나
+우리 사이에 걸어 둔
+작은 등불처럼 흔들리고
+
+말하지 않아도
+당신의 가슴에서
+따뜻한 안부가 전해 온다.
+
+삶이 덜컹거리며
+어둠을 지나갈 때
+
+우리는
+서로의 손을 놓지 않는다.
+
+그것이면 충분하다.
+
+사랑은
+불꽃이 아니라
+
+꺼지지 않는
+작은 온기 하나.
+
+그 온기 하나 품고
+긴 밤을 건너 오면
+
+밤 이슬에 젖는 마음
+
+우리의 체온으로  
+아침빛이 온다
+
+그리고
+
+아침빛이  
+깊어 가는 가을
+이 하루
+살아 갈수 있도록
+우리의 체온을 덮어준다
+        </div>
+
+        <!-- 2. 가시는 내목의 진주 목걸이 -->
+        <div class="content-box">
+            <div class="content-title">가시는 내목의 진주 목걸이</div>
+가시가 있어
+아파 울어 온
+진주의 속살
+
+고운 산야
+꽃바람에 씻기고 나면
+눈물은 꽃길 따라 흘러와서
+풀잎 적시는 강이 되고
+
+아팠던 만큼 진한 향수로
+모여드는 기억들
+그리움은 우리들 향연의 옛길
+별처럼 흩어졌다 다시 모인다
+
+가시는 아플수록
+내 목엔 진주 목걸이
+
+그 빛은 어둠 속 나의 등불
+
+먼 뻐꾸기 날아가는
+가을 하늘 아래
+
+누군가 부어 놓은 향수 물에
+오늘은
+속옷을 하얗게 빨래한다
+
+아픔은 향기가 되고
+내 길에 등불이 된다
+        </div>
+
+        <!-- 3. 스마트폰이 대중화되기 전 -->
+        <div class="content-box">
+            <div class="content-title">스마트폰이 대중화되기 전</div>
+스마트폰이 대중화되기 전
+전철은
+막걸리에 취한 시간이었다
+
+언젠가 무엇 때문에
+그렇게 마셨는지
+네온사인은 알 수 없다
+
+늘 타던 전철은
+비틀거리며
+우리 집 방향으로 가지 않는다
+
+술 취한 전철은
+막차라고 주정을 한다
+
+트림은 금물
+빨간 글씨로 쓰지 말 것
+
+얼마쯤 갔을까
+어디서 내렸는지
+아직 기억이 없다
+
+오늘은 전철 밖
+
+빈 막걸리 병을
+우주로 던져 버렸다
+
+술사는
+남은 안주
+김치 한 잎을 먹는다
+        </div>
+
+        <!-- 4. 시는 -->
+        <div class="content-box">
+            <div class="content-title">시는</div>
+나의 말로
+나를 말하는 것.
+
+끝없이 울려 퍼지는
+시장의 소리가 아니라,
+굶주린 배에서 터져 나오는
+비명 같은 말.
+
+붕어빵 맛에 
+길들여진 낚시꾼은
+결국 고기를 그리지 못한다.
+
+그러나,
+별빛처럼 맑은 눈망울을
+선별하며, 타협하지 않기에
+밝은 빛을 품으면
+끝내 배가 고프다.
+
+넌 홀로 길을 만들고
+외롭게 걸어간다
+
+나의 옷을 입고,
+나의 신을 신고,
+내가 울어야 하는 
+숲길을 너도 건너 간다.
+
+그래 웃자.
+나도 웃고,
+너도 웃자.
+
+우리가 함께 웃는 숲,
+그 숲에 
+중계기를 세울까
+안테나를 세우자
+
+네가 옆에 있는 새벽,  
+
+어둔 빛이 곱다.
+시향이 아침빛이다
+        </div>
+
+        <!-- 5. 평생 극장에 간 날은 -->
+        <div class="content-box">
+            <div class="content-title">평생 극장에 간 날은</div>
+평생 극장에 간 날은
+​중학교 중간고사가 끝난 날
+
+​벤허
+노인과 바다
+
+​팽팽했던 긴장을 풀고
+예민했던 사춘기의 가슴에
+여유와 낭만을 심었다
+
+​스크린 속 사랑에 마음을 빼앗기고
+누군가를 가슴에 담는 법을 배웠다
+
+​그때 심은 낭만이
+늙은 지금까지 남아
+​아득한 고대의 한순간이
+다시 이 땅을 달군다
+
+​오딧세우스,
+너는 누구냐
+
+​바다를 달려온 전사여
+파도가 멈추는 날
+
+벤허처럼
+노인과 바다처럼
+
+이제는
+잠들라
+        </div>
+
+        <!-- 6. 영화처럼 -->
+        <div class="content-box">
+            <div class="content-title">영화처럼</div>
+영화처럼
+가을이 왔습니다
+
+​땀 흘려 수고한
+열매를 먹는 것이
+복의 원천
+
+​불행은
+그렇지 못하고
+
+​땀 흘려 수고한
+열매를
+벌레가 먹고
+비바람에 떨어지고
+도둑이 털어가는 것
+
+이것이 불행입니다
+
+​땀의 결실
+가을빛 열매 위에
+입술이 달리고
+
+햇살 속에서
+가을이 건넨 홍시
+가슴이 불탄다
+        </div>
+
+        <!-- 7. 가을 안개는 -->
+        <div class="content-box">
+            <div class="content-title">가을 안개는</div>
+가을 안개는
+숲의 숨결을 감싸고
+
+산장은
+고요한 시간의 집이 되어
+
+너에게로 가는
+나의 발자국은
+젖은 낙엽 위에
+조용히 스며든다
+
+아직 식지 않은
+눈빛을 안고
+
+나는 
+너의 꿈을 지켜보며
+새벽의 빛을 기다린다
+
+햇살이 숲을 열면
+우리의 아침은
+더 깊은 평화로 깨어나리라
+        </div>
+
+        <!-- 8. 내 목엔 진주 목걸이 -->
+        <div class="content-box">
+            <div class="content-title">내 목엔 진주 목걸이</div>
+가시가 있어
+아파 울어 온
+진주의 속살
+
+고운 산야
+꽃바람에 씻기고 나면
+눈물은 꽃길 따라 흘러와서
+풀잎 적시는 강이 되고
+
+아팠던 만큼 진한 향수로
+모여드는 기억들
+그리움은 우리들 향연의 옛길
+별처럼 흩어졌다 다시 모인다
+
+가시는 아플수록
+내 목엔 진주 목걸이
+
+그 빛은 어둠 속 나의 등불
+
+먼 뻐꾸기 날아가는
+가을 하늘 아래
+
+누군가 부어 놓은 향수 물에
+오늘은
+속옷을 하얗게 빨래한다
+
+아픔은 향기가 되고
+내 길에 등불이 된다
+        </div>
+
+        <!-- 9. 낙엽이 떨어질 때 -->
+        <div class="content-box">
+            <div class="content-title">낙엽이 떨어질 때</div>
+숲속에
+오직 하나의 푸른 파문만 남기고
+
+고요한 마른 가지 끝에는
+흐린 숨소리만 남기고
+
+하늘에는
+처음부터 어둠을 가르는
+하얀 궤적만 남기고
+
+높이 들어 올린 한삼 소매 끝에
+열쌘 없이 달가운 별빛이 내려가는
+
+아다지오 라르고
+아다지오 라르고
+
+긴 울음에
+은결 들어가는
+가을 초입 화관무만 남기고
+
+은사죽음까지
+남아 있는 시간
+
+그리워하기에는
+아직도 넉넉한
+
+모해의 눈빛은
+남기지 않았다
+        </div>
+
+        <!-- 10. 건너편 머스마 -->
+        <div class="content-box">
+            <div class="content-title">건너편 머스마</div>
+혼례복 젖어 가는
+족두리 쓴 신부는
+밤새 울었을까
+
+아이라인이 흘러내린 자국에
+아침 바람이 분다
+
+족두리를 쓰고 나서
+설레던 첫 마음
+
+바위도 기다리는
+행복을 알게 되었다
+
+세월이 지나도
+신부의 방문은 열리지 않고
+
+계절마다
+진한 향수에 젖은
+도시의 밤바람이 분다
+
+바위가 바위였을 때
+천년의 침묵으로 살아왔는데
+
+신부는 눈빛을 운명처럼
+밤하늘 별 하나에
+모아둔다
+
+누가 바위에
+족두리를 씌운 걸까
+
+건너편 머스마
+향로봉은 알고 있겠지
+        </div>
+
+        <!-- 11. 대칭 -->
+        <div class="content-box">
+            <div class="content-title">대칭</div>
+대칭은 
+Cnt'l C
+Cnt'l P
+
+하나가 될수 없는
+완벽한 둘
+
+고요한 수면에 
+
+붙어 넣기 한 
+너의 모습은
+
+반영이 이루어지 까지
+
+바람을 잠 재우고
+
+아침의 온도는
+시간적 변화가 
+0이어야 한다
+
+혹여 기침 소리는
+파문을 일으키고
+파고는 바람을 불러 온다
+그 바람의 기압 차이로 
+하나는 상승기류
+하나는 하강 기류를 
+형성한다
+
+우리처럼
+
+대칭은
+Cnt'l C
+Cnt'l P
+
+얼마나 닮고 싶었을까
+반영의 얼굴
+
+고요한 수면에
+
+붙어 넣기 한
+너의 모습은
+
+바람을 잠재우고
+
+아침의 온도는
+시간의 변화를
+가두고
+
+긴 묵상처럼
+
+고요하라
+        </div>
+
+<!-- 12. 거울 속 나. -->
+        <div class="content-box">
+            <div class="content-title">12</div>
+나의 세계를 드나드는 현관.
+그곳 거울 속 노인과
+기억 너머 낯선 인사를 자주 나눈다.
+여기는
+내가 나를 알아보지 못하는 경계구역.
+지혜자는
+젊은 초병 하나를 경계선 앞에 세우지만
+초병이 졸기도 하는 날이면
+하늘에서 별이 내려온다.
+파란 하늘을 먹고 별이 된 너.
+자작나무 하얀 가지 위로
+달이 떠오르는 박꽃 피는 밤.
+그리움일까.
+여린 가슴으로 유성이 떨어진다.
+어디선가
+익숙한 눈빛 하나 반짝인다.
+이상하지,
+이름조차 떠오르지 않는데
+두근거리는 가슴이 먼저 알아챈다.
+아,
+나는 아직도 너를 잊지 못했구나.
+
+나의 세계를 드나드는 현관.
+그곳 거울 속 노인이 아직 있다
+        </div>
+
+        <!-- 13. 국화의 향기-->
+        <div class="content-box">
+            <div class="content-title">232</div>
+진한 초록 잎 사이로
+수줍은 꽃잎을 내미는 국화는
+먼 봄부터 모아온 향기를
+당신 앞에 내어 놓고
+바람에 흔들리는 옷깃 사이로
+스며든다.
+
+아직 다 피지 않은 꽃잎에도
+순결한 숨결이 살아있어
+우리는 생명의 호흡으로
+하나가 된다.
+
+고난이 덮칠 때
+시린 서리가 내려와
+노란 꽃잎을 떨게 하여도
+끝내 감추지 못한 향기는,
+
+가을빛 풍요로운
+우리들의 계절을 지나
+저 멀리
+
+홀로 
+외로운 사람에게도
+사랑으로 찾아간다.
+
+생령이 
+향기로 숨 쉬는 그날은
+소생하는 우리들이 살만한
+싱싱한 계절이 열린다 
+
+
+주일 제단 위 노란 국화를 앞에서
+누군가 널 위해 기도하네 
+다.
+        </div>
+
+
+
+        <!-- . 12 -->
+        <div class="content-box">
+            <div class="content-title">12</div>
+내용이 들어갈 자리입니다.
+        </div>
+
+        <!-- 1. 232 -->
+        <div class="content-box">
+            <div class="content-title">232</div>
+내용이 들어갈 자리입니다.
+        </div>
+
+        <!-- . 45 -->
+        <div class="content-box">
+            <div class="content-title">45</div>
+내용이 들어갈 자리입니다.
+        </div>
+
+        <!-- 페이지 수열 (PC) -->
+        <div class="pagination" id="pagination"></div>
+
+    </main>
+
+</div>
+
+<script>
+
+const itemsPerPage = 10;
+
+const music = document.getElementById("music");
+const titles = document.querySelectorAll(".title-item");
+const contents = document.querySelectorAll(".content-box");
+const pagination = document.getElementById("pagination");
+const mobilePagination = document.getElementById("mobilePagination");
+
+function createPagination() {
+    pagination.innerHTML = "";
+    if (mobilePagination) {
+        mobilePagination.innerHTML = "";
+    }
+
+    const totalPages = Math.ceil(titles.length / itemsPerPage);
+
+    for (let page = 1; page <= totalPages; page++) {
+        /* PC용 */
+        const button = document.createElement("button");
+        button.className = "page-number";
+        button.textContent = page;
+        button.onclick = function() {
+            showPage(page);
+        };
+        pagination.appendChild(button);
+
+        /* 스마트폰용 */
+        if (mobilePagination) {
+            const mobileButton = document.createElement("button");
+            mobileButton.className = "page-number";
+            mobileButton.textContent = page;
+            mobileButton.onclick = function() {
+                showPage(page);
+            };
+            mobilePagination.appendChild(mobileButton);
+        }
+    }
+}
+
+function showPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+
+    titles.forEach((title, index) => {
+        if (index >= start && index < end) {
+            title.style.display = "block";
+        } else {
+            title.style.display = "none";
+        }
+    });
+
+    const buttons = document.querySelectorAll(".pagination .page-number, .mobile-pagination .page-number");
+
+    buttons.forEach((button, index) => {
+        // PC와 모바일 버튼 개수가 2배이므로 현재 페이지 번호와 일치하는 것들에 active 부여
+        if (Number(button.textContent) === page) {
+            button.classList.add("active");
+        } else {
+            button.classList.remove("active");
+        }
+    });
+
+    showContent(start);
+}
+
+function showContent(number) {
+    if (window.innerWidth <= 600) {
+        document.querySelector(".sidebar").style.display = "none";
+        document.querySelector(".content").classList.add("mobile-open");
+    }
+
+    contents.forEach(content => {
+        content.classList.remove("active");
+    });
+
+    if (contents[number]) {
+        contents[number].classList.add("active");
+        contents[number].scrollTop = 0;
+    }
+
+    titles.forEach((title, index) => {
+        if (index === number) {
+            title.classList.add("active");
+        } else {
+            title.classList.remove("active");
+        }
+    });
+
+    if (music) {
+        music.play().catch(function(error) {
+            console.log("음악 재생을 시작하지 못했습니다.", error);
+        });
+    }
+}
+
+function backToTitles() {
+    document.querySelector(".content").classList.remove("mobile-open");
+    document.querySelector(".sidebar").style.display = "flex";
+
+    contents.forEach(content => {
+        content.classList.remove("active");
+    });
+
+    titles.forEach(title => {
+        title.classList.remove("active");
+    });
+}
+
+createPagination();
+showPage(1);
+
+</script>
+
+</body>
+</html>
